@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Add New Products</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(to right, #e0eafc, #cfdef3);
+      padding: 30px;
+    }
+
+    .container {
+      max-width: 550px;
+      margin: auto;
+      background-color: #fff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+      color: #333;
+    }
+
+    h2 {
+      text-align: center;
+      color: #4a90e2;
+      margin-bottom: 25px;
+    }
+
+    label {
+      font-weight: bold;
+      margin-top: 15px;
+      display: block;
+      color: #555;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      box-sizing: border-box;
+      font-size: 14px;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      background-color: #4a90e2;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #357ab7;
+    }
+
+    #product-list {
+      margin-top: 30px;
+    }
+
+    .product {
+      background-color: #f7f9fb;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 15px;
+      margin-bottom: 15px;
+      position: relative;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .product img {
+      margin-top: 10px;
+      max-width: 100%;
+      border-radius: 6px;
+    }
+
+    .delete-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background-color: #ff4d4d;
+      border: none;
+      color: white;
+      padding: 6px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 12px;
+    }
+
+    .delete-btn:hover {
+      background-color: #e60000;
+    }
+
+    small {
+      display: block;
+      color: #888;
+      font-size: 12px;
+      margin-top: 2px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>ADD NEW PRODUCTS</h2>
+
+    <label for="name">NAME:</label>
+    <input type="text" id="name" placeholder="Enter product name">
+
+    <label for="price">PRICE:</label>
+    <input type="number" id="price" placeholder="Enter product price">
+
+    <label for="image">IMAGE URL: <small>Paste direct image URL (ends with .jpg/.png etc.)</small></label>
+    <input type="text" id="image" placeholder="Paste a direct image link (Google Images → right-click → 'Copy image address')">
+
+    <button onclick="addProduct()">ADD</button>
+    <button onclick="deleteName()">DELETE NAME</button>
+
+    <div id="product-list"></div>
+  </div>
+
+  <script>
+    function addProduct() {
+      const name = document.getElementById("name").value.trim();
+      const price = document.getElementById("price").value.trim();
+      const image = document.getElementById("image").value.trim();
+
+      if (!name || !price || !image) {
+        alert("Please fill all fields.");
+        return;
+      }
+
+      const productList = document.getElementById("product-list");
+
+      const productDiv = document.createElement("div");
+      productDiv.className = "product";
+
+      productDiv.innerHTML = `
+        <button class="delete-btn" onclick="this.parentElement.remove()">X</button>
+        <p><strong>Name:</strong> ${name}</p>
+        <p><strong>Price:</strong> $${price}</p>
+        <img src="${image}" alt="${name}">
+      `;
+
+      productList.appendChild(productDiv);
+
+      // Clear inputs
+      document.getElementById("name").value = "";
+      document.getElementById("price").value = "";
+      document.getElementById("image").value = "";
+    }
+
+    function deleteName() {
+      const nameInput = document.getElementById("name");
+      nameInput.value = "";
+      nameInput.focus();
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Weather Forecast</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #a18cd1, blue);
+      background-size: 400% 400%;
+      animation: gradientShift 20s ease infinite;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 40px 20px;
+    }
+
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .weather-container {
+      background-color: rgba(255, 255, 255, 0.2);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 30px;
+      width: 100%;
+      max-width: 500px;
+      color: #fff;
+      text-align: center;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+      font-size: 30px;
+    }
+
+    label {
+      font-weight: 600;
+      display: block;
+      margin-bottom: 8px;
+      text-align: left;
+    }
+
+    select, input {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      margin-bottom: 15px;
+      background-color: #f9f9f9;
+      color: #333;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: bold;
+      background-image: linear-gradient(315deg, #6a11cb 0%, #2575fc 74%);
+      color: #fff;
+      cursor: pointer;
+      transition: opacity 0.3s ease;
+    }
+
+    button:hover {
+      opacity: 0.9;
+    }
+
+    #weatherResult {
+      margin-top: 25px;
+      padding: 20px;
+      background-color: rgba(255, 255, 255, 0.1);
+      border-radius: 15px;
+      text-align: left;
+      display: none;
+    }
+
+    #weatherResult h2 {
+      margin-bottom: 10px;
+    }
+
+    #weatherResult p {
+      margin: 6px 0;
+      font-size: 14px;
+      color: #f0f0f0;
+    }
+  </style>
+</head>
+<body>
+  <div class="weather-container">
+    <h1>Weather Forecast</h1>
+    <form id="weatherForm">
+      <label for="location">Choose Location:</label>
+      <select id="location" name="location">
+        <option value="27.2311,88.6111">Singtam</option>
+        <option value="27.1198,88.2982">Sombarey</option>
+        <option value="27.2647,88.5895">Geyzing</option>
+        <option value="27.3314,88.6138">Gangtok</option>
+        <option value="27.4903,88.4142">Bermiok</option>
+        <option value="27.4903,88.4142">Daramdin</option>
+      </select>
+      <button type="submit">Get Weather</button>
+    </form>
+    <div id="status" style="margin-top: 10px; font-size: 14px;"></div>
+    <div id="weatherResult">
+      <div id="forecast"></div>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById("weatherForm").addEventListener("submit", function(event) {
+      event.preventDefault();
+      const coords = document.getElementById("location").value.split(",");
+      fetchWeatherData(coords[0], coords[1]);
+    });
+
+    function fetchWeatherData(latitude, longitude) {
+      const url = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&daily=temperature_2m_max,temperature_2m_min,precipitation_sum,weathercode&timezone=Asia/Kolkata`;
+
+      fetch(url)
+        .then(res => res.json())
+        .then(data => {
+          if (data && data.daily) {
+            displayWeather(data);
+          } else {
+            document.getElementById("status").textContent = "Weather data not available.";
+            document.getElementById("weatherResult").style.display = "none";
+          }
+        })
+        .catch(error => {
+          document.getElementById("status").textContent = "Error fetching weather data.";
+          document.getElementById("weatherResult").style.display = "none";
+          console.error("Error fetching weather data:", error);
+        });
+    }
+
+    function displayWeather(data) {
+      const forecast = data.daily;
+      const weatherConditions = {
+        0: { description: "Clear", image: "ClearSky.gif" },
+        1: { description: "Partly cloudy", image: "partly_cloudy.gif" },
+        3: { description: "Overcast", image: "overcast.gif" },
+        45: { description: "Fog", image: "cloudy.gif" },
+        53: { description: "Moderate rain", image: "moderate_rain.gif" },
+        66: { description: "Freezing Rain", image: "freezing_rain.gif" },
+        71: { description: "Snowfall", image: "snowfall.gif" },
+        95: { description: "Thunderstorm", image: "Thunderstorm.gif" },
+      };
+
+      let forecastHTML = "";
+      forecast.time.forEach((date, index) => {
+        const code = forecast.weathercode[index];
+        const condition = weatherConditions[code] || { description: "Clear", image: "ClearSky.gif" };
+
+        forecastHTML += `
+          <div style="display: flex; align-items: center; margin-bottom: 20px;">
+            <img src="${condition.image}" alt="${condition.description}" 
+                 onerror="this.onerror=null;this.src='fallback.gif';"
+                 style="width: 120px; height: 100px; border-radius: 10px; margin-right: 20px; object-fit: cover;">
+            <div>
+              <p><strong>Date:</strong> ${date}</p>
+              <p><strong>Weather:</strong> ${condition.description}</p>
+              <p><strong>Max Temp:</strong> ${forecast.temperature_2m_max[index]}°C | <strong>Min Temp:</strong> ${forecast.temperature_2m_min[index]}°C</p>
+              <p><strong>Precipitation:</strong> ${forecast.precipitation_sum[index]} mm</p>
+            </div>
+          </div>
+        `;
+      });
+
+      document.getElementById("status").textContent = "Weather data fetched successfully!";
+      document.getElementById("forecast").innerHTML = forecastHTML;
+      document.getElementById("weatherResult").style.display = "block";
+    }
+  </script>
+</body>
+</html>

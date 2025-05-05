@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Registration Form</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f8ff;
+      padding: 40px;
+    }
+    .form-container {
+      background: lightblue;
+      padding: 30px;
+      border-radius: 12px;
+      max-width: 400px;
+      margin: auto;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    label {
+      font-weight: bold;
+      display: block;
+      margin-top: 15px;
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+    button {
+      margin-top: 20px;
+      width: 100%;
+      padding: 12px;
+      background-color: #007BFF;
+      border: none;
+      color: white;
+      font-size: 16px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    .error {
+      color: red;
+      font-size: 0.9em;
+      margin-top: 5px;
+    }
+  </style>
+</head>
+<body>
+
+  <h2 style="color:rgb(10, 11, 10); text-align:center;">Prayash Registration  Form</h2>
+  <div class="form-container">
+  <form id="registrationForm">
+    <label for="name">Name:</label>
+    <input type="text" id="name" required>
+    
+    <label for="email">email:</label>
+    <input type="text" id="email" required>
+
+    <label for="password">Password:</label>
+    <input type="password" id="password" required>
+
+    <label for="retypePassword">Retype Password:</label>
+    <input type="password" id="retypePassword" required>
+
+    <label for="phone">Phone Number:</label>
+    <input type="text" id="phone" required>
+
+    <button type="submit">Submit</button>
+  </form>
+
+  <div id="result"></div>
+
+  <script>
+    document.getElementById("registrationForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      const name = document.getElementById("name").value;
+      const password = document.getElementById("password").value;
+      const retype = document.getElementById("retypePassword").value;
+      const phone = document.getElementById("phone").value;
+      const result = document.getElementById("result");
+
+      if (password !== retype) {
+        result.innerHTML = "<p style='color: red;'>Passwords do not match!</p>";
+        return;
+      }
+
+      result.innerHTML = `
+        <h3>Registration Successful</h3>
+        <p><strong>Name:</strong> ${name}</p>
+        <p><strong>Phone:</strong> ${phone}</p>
+      `;
+
+      this.reset();
+    });
+  </script>
+
+</body>
+</html>
