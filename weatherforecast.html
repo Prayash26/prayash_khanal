@@ -152,20 +152,19 @@
     function displayWeather(data) {
       const forecast = data.daily;
       const weatherConditions = {
-        0: { description: "Clear", image: "ClearSky.gif" },
-        1: { description: "Partly cloudy", image: "partly_cloudy.gif" },
-        3: { description: "Overcast", image: "overcast.gif" },
-        45: { description: "Fog", image: "cloudy.gif" },
-        53: { description: "Moderate rain", image: "moderate_rain.gif" },
-        66: { description: "Freezing Rain", image: "freezing_rain.gif" },
-        71: { description: "Snowfall", image: "snowfall.gif" },
-        95: { description: "Thunderstorm", image: "Thunderstorm.gif" },
+        0: { description: "Clear", image: "Images/ClearSky.gif" },
+        1: { description: "Partly cloudy", image: "Images/partly_cloudy.gif" },
+        3: { description: "Overcast", image: "Images/Overcast.gif" },
+        45: { description: "Fog", image: "Images/cloudy.gif" },
+        53: { description: "Moderate rain", image: "Images/moderate_rain.gif" },
+        71: { description: "Snowfall", image: "Images/snowfall.gif" },
+        95: { description: "Thunderstorm", image: "Images/Thunderstorm.gif" },
       };
 
       let forecastHTML = "";
       forecast.time.forEach((date, index) => {
         const code = forecast.weathercode[index];
-        const condition = weatherConditions[code] || { description: "Clear", image: "ClearSky.gif" };
+        const condition = weatherConditions[code] || { description: "Clear", image: "Images/ClearSky.gif" };
 
         forecastHTML += `
           <div style="display: flex; align-items: center; margin-bottom: 20px;">
